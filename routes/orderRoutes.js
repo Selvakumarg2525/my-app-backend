@@ -2,7 +2,7 @@
 const authController = require('../controllers/authController');
 // routes/orderRoutes.js
 const express = require('express');
-const orderController = require('../controllers/orderController');
+const orderController = require('../controllers/OrderController');
 const router = express.Router();
 
 router.post('/', orderController.createOrder);
