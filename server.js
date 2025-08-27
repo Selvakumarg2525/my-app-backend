@@ -9,11 +9,29 @@
         const app = express();
         const upload = multer();
         const server = http.createServer(app);
-        const admin = require('firebase-admin');
+        // REPLACE WITH THIS (SECURE)
+const admin = require('firebase-admin');
 
-
-        const serviceAccount = require('./config/firebase-service-account.json');
-
+// Check if we are in a production environment (like Render)
+// where the credentials are provided as a string in an environment variable
+if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+  // Parse the JSON string from the environment variable
+  const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    // ... other options (e.g., databaseURL)
+  });
+  console.log("Firebase Admin initialized from environment variable.");
+} else {
+  // Fall back to the local file for development
+  // Make sure this path is correct for your local machine
+  const serviceAccount = require('./config/firebase-service-account.json');
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    // ... other options
+  });
+  console.log("Firebase Admin initialized from local file.");
+}
         // Middleware
         app.use(cors({
           origin: ['http://localhost:5500', 'http://127.0.0.1:5500'],
